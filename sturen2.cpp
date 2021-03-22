@@ -13,6 +13,7 @@
 
 using namespace std;
 
+//Pin genomen, zijn globale waardes gekozen om niet de hele tijd parameters mee te geven.
 int low=20;
 const int ledpin = 1;
 int servo = 0;
@@ -28,6 +29,8 @@ void servoPulse(int pin,float slaap){
 }
 
 void led_pwm(const int led){
+    //De led pulse wordt hier aangeroepen. Door de verschillende golven kan je de snelheid aanpassen.
+    //Je kunt het testen met een ledje.
     for (;;){
         digitalWrite (led, HIGH) ; delay (1) ;
         digitalWrite (led,  LOW) ; delay (low) ;
@@ -35,10 +38,12 @@ void led_pwm(const int led){
 }
 
 void sturen() {
+    //Dit is een grote functie die het sturen bekijkt en reageert op WASD.
     static int draaien = 1500;
 
     int ch = 0;
-
+    
+    //We gebruiken getch() om niet de hele tijd een Enter in te toetsen. Hiervoor moet een extra window komen en de onderstaande regels.
     initscr();
     cbreak();
     nodelay(stdscr, TRUE);
@@ -49,6 +54,7 @@ void sturen() {
     do {
         if ((ch = getch()) != ERR) {
             switch (ch) {
+                    //Gaat harder, gaat niet vanzelf weer zachter.
                     case 'W':
                     case 'w':
                         if(0 < low){
@@ -57,6 +63,7 @@ void sturen() {
                             printw("Pepernoten kind dit is het limiet...\n");
                         }
                     break;
+                    //stuurt naar links
                     case 'A':
                     case 'a':
                         if(draaien <= 500){
@@ -67,6 +74,7 @@ void sturen() {
                             draaien -= 200;
                         }
                     break;
+                    //Gaat zachter, kan niet achteruit.
                     case 's':
                     case 'S':
                         if(low < 20){
@@ -75,6 +83,7 @@ void sturen() {
                             printw("Pepernoten kind dit is het limiet...\n");
                         }
                     break;
+                    //Gaat naar rechts
                     case 'D':
                     case 'd':
                         if(draaien >= 2500){
@@ -89,6 +98,7 @@ void sturen() {
         }
     }
     while (ch != 'Q' && ch != 'q');
+    //Als je stopt dan gaat alles weer naar een basis stand.
     draaien = 1500;
     servoPulse(servo, draaien);
     low = 20;
@@ -97,11 +107,13 @@ void sturen() {
 //    exit(0);
 }
 int main(){
+    //Pinnen worden geset.
     wiringPiSetup ();
     pinMode (servo, OUTPUT);
     pinMode (ledpin, OUTPUT);
 
     while (true) {
+        //Keuze menu als je het programma start. Kunnen extra's aan als bijvoorbeeld ledstrip regelen of leds.
         string invoer = "";
         cout << "Wat wil je doen?\n";
         getline(cin, invoer);
@@ -110,6 +122,7 @@ int main(){
             sturen();
         }
         else if (invoer == "quit"){
+            //Als je klaar bent met de boot sturen.
             cout << "Bye bye babe ;)\n";
             break;
         }
