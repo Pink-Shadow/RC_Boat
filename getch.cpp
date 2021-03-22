@@ -4,42 +4,48 @@
 #include <thread>
 #include <ncurses.h>
 #include <stdio.h>
-
+#include <signal.h>
 int low=18;
 const int ledpin = 1;
 
 
-void led_pwm(const int led){
+void led_pwm(){
 	for (;;){
-        	digitalWrite (led, HIGH) ; delay (1) ;
-        	digitalWrite (led,  LOW) ; delay (low) ;
+        	digitalWrite (ledpin, HIGH) ; delay (1) ;
+        	digitalWrite (ledpin,  LOW) ; delay (low) ;
     	}
 }
 
 
-
-
 int varen(){
+	int ch = 0;
+	//signal(SIGINT, quit);
+
 	initscr();
 	cbreak();
 	nodelay(stdscr, TRUE);
+	std::thread led (led_pwm);
 
-	std::thread led (led_pwm, ledpin);
-
-	while(1)
+	do
 	{
 	
         if ((ch = getch()) != ERR){
-		if (ch == 'q'){break;}
 		if (ch == 'w' || ch == 's'){
-			else if(0 < low && input == "w"){low -= 2;}
-			else if(low < 18 && input == "s"){low += 2;}
-			else {std::cout << "Je hebt het limiet berijkt!" << std::endl;}
+			if(0 < low && ch == 'w'){low -= 2;}
+			else if(low < 18 && ch == 's'){low += 2;}
+			else {printw( "Je hebt het limiet berijkt!\n");}
 		}
-		else {std::cout << "deze optie bestaat niet" << std::endl;}
+		else {printw("Dit karakter doet niks.\n"); }
 	}
+	}
+	while(ch != 'Q' && ch != 'q');
+	
 	led.detach();
+		
+	
 	endwin();
+	digitalWrite(ledpin, LOW);
+
 	return 0;
 
 }
@@ -47,19 +53,18 @@ int varen(){
 int main()
 {
     wiringPiSetup ();
-    int ch;
    
     std::string input = "";
     pinMode (ledpin, OUTPUT);
     std::cout << "whatcha wanna do?" << std::endl;
-    while(1){
-	if(getline(std::cin, input) == "varen"){
+    while(getline(std::cin, input)){
+	if(input == "varen"){
 		varen();
 	}
-	else if(getline(std::cin, input) == "exit"){
+	else if(input == "exit"){
 		break;
 	}
-	else {std::cout << "verkeerde input bitch" << std::endl;}
+	else {std::cout << "verkeerde input" << std::endl;}
     }
     return 0;
 }
