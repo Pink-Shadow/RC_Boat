@@ -3,59 +3,70 @@
 #include <string>
 #include <thread>
 #include <ncurses.h>
-#include <stdio.h>
-#include <signal.h>
-int low=18;
+//#include <stdio.h>
+//#include <signal.h>
+#include <unistd.h>
+
+
+int power = 100;
 const int ledpin = 1;
+const int servo = 26;
+static int draaien = 1500;
 
 
-void led_pwm(){
-	for (;;){
-        	digitalWrite (ledpin, HIGH) ; delay (1) ;
-        	digitalWrite (ledpin,  LOW) ; delay (low) ;
-    	}
+void servoPulse(int pin,float slaap){
+    	//Dit is de de pulse voor de Servo aan te sturen.
+	digitalWrite(pin, HIGH);
+        usleep(slaap);
+        digitalWrite(pin, LOW);
+        delay(200);
 }
 
 
 int varen(){
 	int ch = 0;
-	//signal(SIGINT, quit);
-
+		
+	pinMode (ledpin, PWM_OUTPUT);
 	initscr();
 	cbreak();
 	nodelay(stdscr, TRUE);
-	std::thread led (led_pwm);
-
-	do
-	{
 	
-        if ((ch = getch()) != ERR){
-		if (ch == 'w' || ch == 's'){
-			if(0 < low && ch == 'w'){low -= 2;}
-			else if(low < 18 && ch == 's'){low += 2;}
-			else {printw( "Je hebt het limiet berijkt!\n");}
+	do{	
+	       	if ((ch = getch()) != ERR){
+			if (ch == 'w' || ch == 'a' || ch == 's' || ch == 'd'){
+
+				if(power < 1020 && ch == 'w') pwmWrite(ledpin, power+=40);
+
+				else if(100 <= power && ch == 's') pwmWrite(ledpin, power-=40);
+			
+				else if(draaien >= 500 && ch == 'a') servoPulse(servo, draaien-=200);
+		
+				else if(draaien <= 2500 && ch == 'd') servoPulse(servo, draaien+=200);
+		
+				else {printw( "Je hebt het limiet berijkt!\n");}
+			}
+			else {
+				printw("Dit karakter doet niks.\n"); 
+			}
 		}
-		else {printw("Dit karakter doet niks.\n"); }
 	}
-	}
+
 	while(ch != 'Q' && ch != 'q');
 	
-	led.detach();
-		
-	
+	draaien = 1500;
+    	servoPulse(servo, draaien);	
+	pinMode (ledpin, OUTPUT);
+	pinMode (servo, OUTPUT);
 	endwin();
-	digitalWrite(ledpin, LOW);
 
 	return 0;
 
 }
 
-int main()
-{
+int main(){
     wiringPiSetup ();
    
     std::string input = "";
-    pinMode (ledpin, OUTPUT);
     std::cout << "whatcha wanna do?" << std::endl;
     while(getline(std::cin, input)){
 	if(input == "varen"){
