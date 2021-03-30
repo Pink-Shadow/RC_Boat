@@ -16,7 +16,7 @@ PAGE="""\
 </head>
 <body>
 <center><h1>Raspberry Pi - RC_Boat Front View</h1></center>
-<center><img src="stream.mjpg" width="640" height="480"></center>
+<center><img src="stream.mjpg" width="480" height="640"></center>
 </body>
 </html>
 """
