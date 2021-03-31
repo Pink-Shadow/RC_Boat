@@ -24,38 +24,25 @@ https://www.pixelstalk.net/wp-content/uploads/2015/05/Blue-sea-landscape-wallpap
 margin: 0 auto;}
 
 div.camera_voor{
-	position: fixed;
-	top: 150px;
-	left: 200px;
-}
-
-div.camera_achter{
-	position: fixed;
-	top: 150px;
-	right:200px;
+	position:fixed;
+	top:38%;
+	left: 28.5%
 	
 }
 </style>
 
 <title>Raspberry Pi - Surveillance Camera</title>
 </head>
-
 <body>
 	
 <div id="wrapper">
+<center>
+<h1 style="color:white">Raspberry Pi - RC_Boat Front View</h1>
 	
-<h1 style="color:white">Raspberry Pi - RC_Boat Front View</h1></center>
 
-<div class= "camera_voor">	<img src="stream.mjpg" width="480" height="640">
+<div class= "camera_voor">	<img src="stream_voor.mjpg" width="640" height="480">
 	</div>		
-	
-<div class= "camera_achter">	<img src="stream_achter.mjpg" width="480" height="640">
-	</div>
-
-<button onclick="window.location.href='http://192.168.0.122:8000';">
-      Click Here
-    </button>
-
+</center>
 </div>
 </body>
 </html>
