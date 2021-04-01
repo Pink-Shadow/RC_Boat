@@ -12,10 +12,10 @@ De speaker gebruikt wiringPin 9
 
 ## De besturing
 De boot wordt bestuurd met de w,a,s,d toetsen.
-'''
+```
 De w toets zet de motor harder aan.
 De s toets zet de motor zachter.
 De a toets stuurt de boot naar links.
 De d toets stuurt de boot naar rechst.
 De q en Q toets schakel de besturing uit.
-'''
+```
