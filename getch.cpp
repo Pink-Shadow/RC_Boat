@@ -7,89 +7,98 @@
 #include <string>
 #include <thread>
 #include <ncurses.h>
-//#include <stdio.h>
-//#include <signal.h>
 #include <unistd.h>
 #include "muziek.hpp"
 
 using namespace std;
 
-//Om execudeble van te maken:
-//g++ -Wall -o <naamIets> <bestandNaam>.cpp muziek.hpp music2.cpp -lwiringPi -lpthread -lncurses
-
+// waardes voor de servo en motor
 int power = 100;
-const int ledpin = 1;
-const int servo = 26;
-static int draaien = 1500;
-//speaker gebruikt wiringPin 9!!!
+int draaien = 1500;
 
+// pin definitie
+const int motorpin = 1;
+const int servo = 26;
+
+//Dit is de pulse functie om de Servo aan te sturen.
 void servoPulse(int pin,float slaap){
-    //Dit is de de pulse voor de Servo aan te sturen.
     digitalWrite(pin, HIGH);
     usleep(slaap);
     digitalWrite(pin, LOW);
     delay(200);
 }
 
-
-int varen(){
+// De functie om de boot te besturen met "wasd" 
+void varen(){
     int ch = 0;
 
-    pinMode (ledpin, PWM_OUTPUT);
-    initscr();
+    pinMode (motorpin, PWM_OUTPUT);	// pin setup
+    initscr();				// start screen
     cbreak();
     nodelay(stdscr, TRUE);
 
     do{
         if ((ch = getch()) != ERR){
             if (ch == 'w' || ch == 'a' || ch == 's' || ch == 'd'){
-
-                if(power < 1020 && ch == 'w') pwmWrite(ledpin, power+=40);
-
-                else if(100 <= power && ch == 's') pwmWrite(ledpin, power-=40);
+		
+		// commando's voor de bijbehorende letters
+                if(power < 1020 && ch == 'w') pwmWrite(motorpin, power+=40);
+                else if(100 <= power && ch == 's') pwmWrite(motorpin, power-=40);
 
                 else if(draaien >= 500 && ch == 'a') servoPulse(servo, draaien-=200);
-
                 else if(draaien <= 2500 && ch == 'd') servoPulse(servo, draaien+=200);
 
-                else {printw( "Pepernoten kind dit is het limiet...\n");}
+                else {printw("Dit is het limiet\n");} // error als je aan het limiet zit van de snelheid of angle
             }
             else {
-                printw("Dit karaktertje doet niks :(\n");
+                printw("Deze toets doet niks :(\n"); // error als je een verkeerde toest indrukt
             }
         }
     }
 
+    // Om de besturing uit te schakelen
     while(ch != 'Q' && ch != 'q');
-
+    
+    // reset alles
     draaien = 1500;
     servoPulse(servo, draaien);
-    pinMode (ledpin, OUTPUT);
+    pinMode (motorpin, OUTPUT);
     pinMode (servo, OUTPUT);
-    endwin();
-    return 0;
+    endwin(); // sluit de window
 }
 
+// Start de boot
 int main(){
     wiringPiSetup ();
     string input = "";
-    cout << "Whatcha wanna do?" << endl;
+
+    // vraag om invoer
+    cout << "Wat wil je doen met Reboot?\n" << endl;
+    cout << "1)\tvaren" << endl;
+    cout << "2)\tzinken" << endl;
+    cout << "3)\texit\n" << endl;
+
     while(getline(cin, input)){
-        if(input == "varen"){
-            cout << "Veel stuur plezier!\n";
+
+	// verwerk de invoer
+        if(input == "varen" || input == "1"){
+            cout << "Veel stuur plezier!\n" << endl;
             play("Dark Father Theme");
             varen();
         }
-        else if(input == "zinken"){
-            cout << "Owhjeeej\n";
+        else if(input == "zinken" || input == "2"){
+            cout << "Owhjeeej\n" << endl;
             play("Titanic");
         }
-        else if(input == "exit"){
-            cout << "Bye bye babe ;)\n";
+        else if(input == "exit" || input == "3"){
+            cout << "Bye bye babe ;)\n" << endl;
             break;
         }
-        else {cout << "Verkeerde input Dwerg!!" << endl;}
-        cout << "Whatcha wanna do?" << endl;
+        else {cout << "Er is geen input met die naam" << endl;}
+        cout << "Wat wil je doen met Reboot?" << endl;
+	cout << "1)\tvaren" << endl;
+    	cout << "2)\tzinken" << endl;
+    	cout << "3)\texit\n" << endl;
     }
     return 0;
 }
