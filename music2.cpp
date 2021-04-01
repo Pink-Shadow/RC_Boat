@@ -168,5 +168,5 @@ void play(string song){
     else{
         cout << "Heb die song niet\n";
     }
-    cout << "En finito!\n";
+    cout << "En finito!\n" << endl;
 }
