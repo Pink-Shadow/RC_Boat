@@ -10,7 +10,7 @@ using namespace std;
 
 int speakerPin = 9;
 
-
+//Bron om muziek te maken: https://www.arduino.cc/en/tutorial/Melody
 void playTone(int tone, int duration){
     for (long i = 0; i < duration * 1000L; i += tone * 2) {
         digitalWrite(speakerPin, HIGH);
