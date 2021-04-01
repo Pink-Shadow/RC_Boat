@@ -2,15 +2,17 @@
 // Created by Isaak van Luijk on 24/03/2021.
 //
 #include <iostream>
-#include <wiringPi.h>
-#include <vector>
-#include "muziek.hpp"
+#include <wiringPi.h> //Voor de speaker om geluid te maken.
+#include <vector> //Voor de vectoren
+#include "muziek.hpp" //Voor de koppeling met andere code
 #include <string>
 using namespace std;
 
 int speakerPin = 9;
 
 //Bron om muziek te maken: https://www.arduino.cc/en/tutorial/Melody
+
+//Functie om de noot te "spelen". De toon en hoelang de noot is wordt hiervoor meegegeven.
 void playTone(int tone, int duration){
     for (long i = 0; i < duration * 1000L; i += tone * 2) {
         digitalWrite(speakerPin, HIGH);
@@ -20,6 +22,8 @@ void playTone(int tone, int duration){
     }
 }
 
+//Functie om de juiste toon bij de juiste noot mee te nemen. De juiste toon wordt doorgestuurd naar playTone
+//Er wordt met het 4de octaaf alleen gewerkt. Dit klinkt raar met muziek aangezien je niet steeds omhoog gaat.
 void playNote(string note, int duration){
     vector<string> names = {"c","c#","d","d#","e","f","f#","g","g#","a","a#","b","C"};
     int tones[] = {1915, 1800, 1700, 1600, 1519, 1432, 1350, 1275, 1200,1136, 1075, 1014, 956};
@@ -32,6 +36,8 @@ void playNote(string note, int duration){
     }
 }
 
+//Deze functie wordt aangeroepen om het liedjes spelen te starten.
+//De noten en snelheden worden naast elkaar gelezen en gaat die doorheen.
 void loop(vector<string> notes, int beats[], int tempo,int length){
     for (int i = 0; i < length; i++) {
         if (notes[i] == " ") {
@@ -44,15 +50,14 @@ void loop(vector<string> notes, int beats[], int tempo,int length){
     }
 }
 
+//Functie die je moet aanroepen via de header file. Hier geef je invoer bij welk liedje. Deze wordt uitgevoerd.
 void play(string song){
-    //char notes[] = "ccggaagffeeddc "; // a space represents a rest
-    //int beats[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
+    vector<string> vaderJacobnotes = {"c","c","g","g","a","a","g","f","f","e","e","d","d","c"," "}; // a space represents a rest
+    int vaderJacobbeats[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 
-//    char notesStarwars[] = "cgfedcg"
-//                           "fedcg"
-//                           "fefd";
-//    int beatsStarwars[] = {2,2,1,1,1,2,2,1,1,1,2,2,1,1,1,4};
-    int tempo = 200; //300 orginale
+    vector<string> notesStarwars = {"c","g","f","e","d","c","g","f","e","d","c","g","f","e","f","d"};
+    int beatsStarwars[] = {2,2,1,1,1,2,2,1,1,1,2,2,1,1,1,4};
+//    int tempo = 200; //300 orginale
 
     //Bron: https://mypianonotes.com/my-heart-will-go-on/
     vector<string> titanicNotes = {"e","f#","f#","g#","g#","f#","e","f#","b", // intro
@@ -140,14 +145,25 @@ void play(string song){
                           8,5,3,5,3,2,5,//7 notes Well stay forever this way
                           3,3,5,3,3,3,//6 notes You are safe in my heart
                           4,3,3,5,1,5,3,7}; //8 notes And my heart will go on and on
-    // lengte = the number of notes
-//    vector<string> toonLader = {"c","c#","d","d#","e","f","f#","g","g#","a","a#","b","C"};
-//    int toonLaderBeats[] = {20,20,20,20,20,20,20,20,20,20,20,20,20};
+
+    vector<string> toonLader = {"c","c#","d","d#","e","f","f#","g","g#","a","a#","b","C"};
+    int toonLaderBeats[] = {20,20,20,20,20,20,20,20,20,20,20,20,20};
+    
     wiringPiSetup();
     pinMode(speakerPin, OUTPUT);
+// lengte = the number of notes
 //    loop(toonLader,toonLaderBeats,tempo,toonLader.size());
     if (song == "Titanic"){
-        loop(titanicNotes,titanicBeats,tempo,titanicNotes.size());
+        loop(titanicNotes,titanicBeats,200,titanicNotes.size());
+    }
+    else if(song == "Dark Father Theme"){
+        loop(notesStarwars,beatsStarwars,300,notesStarwars.size());
+    }
+    else if(song == "lawaai"){
+        loop(toonLader,toonLaderBeats,200,toonLader.size());
+    }
+    else if(song == "Kinderliedje"){
+        loop(vaderJacobnotes,vaderJacobbeats,300,vaderJacobnotes.size());
     }
     else{
         cout << "Heb die song niet\n";
