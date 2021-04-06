@@ -19,6 +19,7 @@ int draaien = 1500;
 // pin definitie
 const int motorpin = 1;
 const int servo = 26;
+// speaker = wiringPi pin 9
 
 //Dit is de pulse functie om de Servo aan te sturen.
 void servoPulse(int pin,float slaap){
@@ -67,9 +68,12 @@ void varen(){
     endwin(); // sluit de window
 }
 
+
+
 // Start de boot
 int main(){
     wiringPiSetup ();
+    pinMode(9, OUTPUT);
     string input = "";
 
     // vraag om invoer
@@ -77,28 +81,30 @@ int main(){
     cout << "1)\tvaren" << endl;
     cout << "2)\tzinken" << endl;
     cout << "3)\texit\n" << endl;
-
+   
     while(getline(cin, input)){
 
 	// verwerk de invoer
         if(input == "varen" || input == "1"){
             cout << "Veel stuur plezier!\n" << endl;
-            play("Dark Father Theme");
-            varen();
+ 	    varen();
         }
         else if(input == "zinken" || input == "2"){
-            cout << "Owhjeeej\n" << endl;
-            play("Titanic");
+	    cout << "Owhjeeej\n" << endl;    
         }
         else if(input == "exit" || input == "3"){
-            cout << "Bye bye babe ;)\n" << endl;
-            break;
-        }
+	    break;
+	}
         else {cout << "Er is geen input met die naam" << endl;}
         cout << "Wat wil je doen met Reboot?" << endl;
 	cout << "1)\tvaren" << endl;
     	cout << "2)\tzinken" << endl;
     	cout << "3)\texit\n" << endl;
     }
+    cout << "even wachten tot alle muziek klaar is..." << endl;
+    digitalWrite(9, LOW);
+    cout << "Done!" << endl;
+    cout << "Bye bye babe ;)\n" << endl;
+
     return 0;
 }
