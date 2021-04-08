@@ -37,9 +37,9 @@ void servoPulse(int pin,float slaap){
 //Dit zijn de functies voor de sensoren de afstand te meten.
 void sensor_links(){
     while (true){
-	if (afstand(echo_pin1,trig_pin1) <= 50){
+	if (afstand(echo_pin1,trig_pin1) <= 25){
 	printw("begin de boot te sturen"); }
-	else if(afstand(echo_pin1,trig_pin1) <= 25){ printw("ga eens ff uitwijken");
+	else if(afstand(echo_pin1,trig_pin1) <= 50){ printw("ga eens ff uitwijken");
 	}
     }
 }
@@ -48,9 +48,9 @@ void sensor_links(){
 void sensor_rechts(){
     while (true){
 
-	if (afstand(echo_pin2, trig_pin2) <= 50){
+	if (afstand(echo_pin2, trig_pin2) <= 25){
 	printw("begin de boot te sturen");}
-	else if(afstand(echo_pin2,trig_pin2) <= 25) {printw("ga eens ff uitwijken");
+	else if(afstand(echo_pin2,trig_pin2) <= 50) {printw("ga eens ff uitwijken");
 	}
     }
 }
@@ -61,9 +61,9 @@ void varen(){
    
     pinMode (motorpin, PWM_OUTPUT);	// pin setup
     pinMode (trig_pin1, OUTPUT);
-    pinMode (echo_pin1, OUTPUT);
+    pinMode (echo_pin1, INPUT);
     pinMode (trig_pin2, OUTPUT);
-    pinMode (echo_pin2, OUTPUT);
+    pinMode (echo_pin2, INPUT);
      
     thread links(sensor_links);
     thread rechts(sensor_rechts);
