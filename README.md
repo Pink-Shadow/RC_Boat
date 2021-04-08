@@ -1,14 +1,14 @@
 # RC_Boat
-RC_Boat for a school project.
+RC_Boat voor een school project.
 
-Om ncurses te installen moet je de volgende command doen:
-sudo apt-get install libncurses5-dev libncursesw5-dev
+Om van ncurses gebruik te kunnen maken, moet je eerst 2 libraries installeren d.m.v.\
+`sudo apt-get install libncurses5-dev libncursesw5-dev`
 
-Om een executable van getch te maken:
-g++ -Wall -o [naam van executable] getch.cpp muziek.hpp music2.cpp -lwiringPi -lpthread -lncurses
+Om getch.cpp te compileren moet je het volgende commando gebruiken:\
+`g++ -Wall -o [naam van executable] getch.cpp afstandsencor.cpp muziek.hpp music2.cpp -lwiringPi -lpthread -lncurses`
 
-De motor gebruikt wiringPin:   1
-De servo gebruikt wiringPin:   26
+De motor gebruikt wiringPin:   1\
+De servo gebruikt wiringPin:   26\
 De speaker gebruikt wiringPin: 9
 
 
