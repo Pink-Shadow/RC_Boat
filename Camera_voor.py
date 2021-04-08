@@ -8,7 +8,6 @@ import socketserver
 from threading import Condition
 from http import server
 
-# Layout Camera website
 PAGE="""\
 <html>
 <head>
@@ -23,28 +22,34 @@ https://www.pixelstalk.net/wp-content/uploads/2015/05/Blue-sea-landscape-wallpap
 #wrapper {width: 500px;
 margin: 0 auto;}
 div.camera_voor{
-	position:fixed;
-	top:38%;
-	left: 28.5%
-	
+	position: fixed;
+	top: 150px;
+	left: 500px;
 }
+
 </style>
 <title>Raspberry Pi - Surveillance Camera</title>
 </head>
 <body>
 	
 <div id="wrapper">
-    <center>
-        <h1 style="color:white">Raspberry Pi - RC_Boat Front View</h1>
-        <div class= "camera_voor">	<img src="stream_voor.mjpg" width="640" height="480"></div>
-    </center>
+	
+<h1 style="color:white">Raspberry Pi - RC_Boat Front View</h1></center>
+
+<div class= "camera_voor">	<img src="stream.mjpg" width="640" height="480">
+	</div>	
+
+<button onclick="window.location.href='http://192.168.213.193:8000';">
+      Click Here
+    </button>
+
 </div>
 </body>
 </html>
 """
 
 
-# Refereshed de camera
+
 class StreamingOutput(object):
     def __init__(self):
         self.frame = None
@@ -62,7 +67,6 @@ class StreamingOutput(object):
             self.buffer.seek(0)
         return self.buffer.write(buf)
 
-# Roept de camera aan voor de webpage
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
@@ -76,10 +80,10 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Content-Length', len(content))
             self.end_headers()
             self.wfile.write(content)
-        elif seself.send_response(200)
+        elif self.path == '/stream.mjpg':
+            self.send_response(200)
             self.send_header('Age', 0)
-            self.send_header('lf.path == '/stream.mjpg':
-            Cache-Control', 'no-cache, private')
+            self.send_header('Cache-Control', 'no-cache, private')
             self.send_header('Pragma', 'no-cache')
             self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
             self.end_headers()
@@ -102,7 +106,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_error(404)
             self.end_headers()
 
-# Instellingen voor de camera
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
@@ -118,3 +121,4 @@ with picamera.PiCamera(resolution='640x480', framerate=50) as camera:
         server.serve_forever()
     finally:
         camera.stop_recording()
+
