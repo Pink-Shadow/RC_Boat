@@ -20,6 +20,13 @@ int draaien = 1500;
 const int motorpin = 1;
 const int servo = 26;
 
+//sr04 pins
+const int trig_pin1 = 5;
+const int echo_pin1 = 4;
+
+const int trig_pin2 = 10;
+const int echo_pin2 = 11;
+
 //Dit is de pulse functie om de Servo aan te sturen.
 void servoPulse(int pin,float slaap){
     digitalWrite(pin, HIGH);
@@ -27,12 +34,40 @@ void servoPulse(int pin,float slaap){
     digitalWrite(pin, LOW);
     delay(200);
 }
+//Dit zijn de functies voor de sensoren de afstand te meten.
+void sensor_links(){
+    while (true){
+	if (afstand(echo_pin1,trig_pin1) <= 50){
+	printw("begin de boot te sturen"); }
+	else if(afstand(echo_pin1,trig_pin1) <= 25){ printw("ga eens ff uitwijken");
+	}
+    }
+}
+
+
+void sensor_rechts(){
+    while (true){
+
+	if (afstand(echo_pin2, trig_pin2) <= 50){
+	printw("begin de boot te sturen");}
+	else if(afstand(echo_pin2,trig_pin2) <= 25) {printw("ga eens ff uitwijken");
+	}
+    }
+}
 
 // De functie om de boot te besturen met "wasd" 
 void varen(){
     int ch = 0;
-
+   
     pinMode (motorpin, PWM_OUTPUT);	// pin setup
+    pinMode (trig_pin1, OUTPUT);
+    pinMode (echo_pin1, OUTPUT);
+    pinMode (trig_pin2, OUTPUT);
+    pinMode (echo_pin2, OUTPUT);
+     
+    thread links(sensor_links);
+    thread rechts(sensor_rechts);
+    
     initscr();				// start screen
     cbreak();
     nodelay(stdscr, TRUE);
@@ -61,6 +96,9 @@ void varen(){
     
     // reset alles
     draaien = 1500;
+    rechts.detach();
+    links.detach();
+    
     servoPulse(servo, draaien);
     pinMode (motorpin, OUTPUT);
     pinMode (servo, OUTPUT);
@@ -86,6 +124,9 @@ int main(){
     while(getline(cin, input)){
 
 	// verwerk de invoer
+	if (input == "varen" || input == "1"){
+	    
+	}
         if(input == "varen" || input == "1"){
             cout << "Veel stuur plezier!\n" << endl;
  	    varen();
@@ -109,4 +150,3 @@ int main(){
 
     return 0;
 }
-
