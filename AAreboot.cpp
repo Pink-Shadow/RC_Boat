@@ -105,6 +105,8 @@ void varen(){
     pinMode (motorpin, OUTPUT);
     pinMode (servo, OUTPUT);
     endwin(); // sluit de window
+    sensorLinks->detach();
+    sensorRechts->detach();
 }
 
 
@@ -153,8 +155,6 @@ int main(){
         cout << "3)\texit\n" << endl;
     }
     digitalWrite(9, LOW);
-    sensorLinks->detach();
-    sensorRechts->detach();
     STARWARS->detach();
     music->detach();
     cout << "Done!" << endl;
