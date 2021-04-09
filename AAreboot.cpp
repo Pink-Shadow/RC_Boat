@@ -44,10 +44,10 @@ void sensor_links(int echoPin, int trigPin){
     for(;;){
         float leAfstand = afstand(echoPin,trigPin);
         if(leAfstand <= 25){
-            printw("Uitwijken naar rechts\n");
+            printw("NAAR RECHTS!\n");
         }
         else if(leAfstand <= 50){
-            printw("NAAR RECHTS!\n");
+            printw("Uitwijken naar rechts\n");
         }
         delay(600);
     }
@@ -58,10 +58,10 @@ void sensor_rechts(int echoPin,int trigPin){
     for(;;){
         float leAfstand = afstand(echoPin,trigPin);
         if(leAfstand <= 25){
-            printw("Uitwijken naar links\n");
+            printw("NAAR LINKS!\n");
         }
         else if(leAfstand <= 50){
-            printw("NAAR LINKS!\n");
+            printw("Uitwijken naar links\n");
         }
         delay(600);
     }
