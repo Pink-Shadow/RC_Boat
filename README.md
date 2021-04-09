@@ -9,9 +9,9 @@ Om getch.cpp te compileren moet je het volgende commando gebruiken:\
 
 De motor gebruikt wiringPin:   1\
 De servo gebruikt wiringPin:   26\
-De speaker gebruikt wiringPin: 9
-De linker SR04 gebruikt wiringPin: echo 4, trig 5
-De rechter SR04 gebruikt wiringPin: echo 11, trig 10
+De speaker gebruikt wiringPin: 9\
+De linker SR04 gebruikt wiringPin: echo 4, trig 5\
+De rechter SR04 gebruikt wiringPin: echo 11, trig 10\
 De camera wordt in de camera klip gedaan van de RPI
 
 
